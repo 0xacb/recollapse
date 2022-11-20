@@ -45,7 +45,7 @@ class Recollapse:
         if not self.input:
             if self.file:
                 with open(self.file) as f:
-                    self.input = f.read()
+                    self.input = f.readlines()[0].rstrip()
             else:
                 self.input = sys.stdin.read().rstrip()
 
