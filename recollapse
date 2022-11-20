@@ -81,10 +81,8 @@ class Recollapse:
 
     def build_normalization_dict(self):
         charset = [chr(c) for c in range(0x20,0x7f)]
-        for i in range(0x80):
-            c = chr(i)
-            if c in charset:
-                self.normalization_d[c] = []
+        for c in charset:
+            self.normalization_d[c] = []
         
         for c in range(0xffff):
             norm_c = unidecode.unidecode(chr(c))
