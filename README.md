@@ -99,7 +99,7 @@ Use the `-nt` option to show the normalization table.
 ### Example
 
 ```bash
-$ recollapse -p 1,2,4 -r 10-11 https://legit.example.com
+$ recollapse -e 1 -p 1,2,4 -r 10-11 https://legit.example.com
 %0ahttps://legit.example.com
 %0bhttps://legit.example.com
 https%0a://legit.example.com
@@ -144,6 +144,7 @@ This technique has been presented on [BSidesLisbon 2022](https://bsideslisbon.or
 - [@samwcyo](https://twitter.com/samwcyo)
 - [@yassineaboukir](https://twitter.com/yassineaboukir)
 - [@0xteknogeek](https://twitter.com/0xteknogeek)
+- [@vgpinho](https://github.com/vgpinho)
 - **BBAC**
 
 ---------------
