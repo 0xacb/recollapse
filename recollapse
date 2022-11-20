@@ -1,0 +1,191 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+import string
+import unidecode
+import warnings
+from prettytable import PrettyTable
+import urllib.parse
+import itertools
+
+warnings.simplefilter("ignore")
+
+
+class Recollapse:
+    ENCODING_URL = 1
+    ENCODING_UNICODE = 2
+    ENCODING_RAW = 3
+
+    MODE_START = 1
+    MODE_SEP = 2
+    MODE_NORM = 3
+    MODE_TERM = 4
+
+    output = []
+    normalization_d = {}
+
+    def __init__(self, size, encoding, range, positions, input, file, normtable, alphanum, maxnorm):
+        self.build_normalization_dict()
+        self.size = size
+        self.encoding = encoding
+        self.range = range
+        self.positions = positions
+        self.input = input
+        self.file = file
+        self.normtable = normtable
+        self.alphanum = alphanum
+        self.maxnorm = maxnorm
+
+    def run(self):
+        if self.normtable:
+            self.print_normalization_table()
+            return
+        
+        if not self.input:
+            if self.file:
+                with open(self.file) as f:
+                    self.input = f.read()
+            else:
+                self.input = sys.stdin.read().rstrip()
+
+        fuzzing_range = range(self.range[0], self.range[1]+1)
+        if not self.alphanum:
+            alphanum_ascii = list(map(ord, string.ascii_letters + string.digits))
+            fuzzing_range = [b for b in list(fuzzing_range) if b not in alphanum_ascii]
+
+        if self.MODE_START in self.positions:
+            for t in itertools.product(fuzzing_range, repeat=self.size):
+                self.generate(t, 0)
+
+        if self.MODE_SEP in self.positions:
+            for i in range(len(self.input)):
+                c = self.input[i]
+                if c in string.punctuation:
+                    for t in itertools.product(fuzzing_range, repeat=self.size):
+                        self.generate(t, i)
+                        self.generate(t, i+1)
+
+        if self.MODE_NORM in self.positions:
+            for i in range(len(self.input)):
+                c = self.input[i]
+                if c in self.normalization_d:
+                    for cc in self.normalization_d.get(c)[0:self.maxnorm]:
+                        self.generate((ord(cc),), i, replace=True)
+
+        if self.MODE_TERM in self.positions:
+            for t in itertools.product(fuzzing_range, repeat=self.size):
+                self.generate(t, len(self.input))
+
+        print("\n".join(list(sorted(set(self.output)))))
+
+    def build_normalization_dict(self):
+        charset = [chr(c) for c in range(0x20,0x7f)]
+        for i in range(0x80):
+            c = chr(i)
+            if c in charset:
+                self.normalization_d[c] = []
+        
+        for c in range(0xffff):
+            norm_c = unidecode.unidecode(chr(c))
+            if len(norm_c) == 1 and norm_c in charset and norm_c != chr(c):
+                self.normalization_d[norm_c].append(chr(c))
+
+    def print_normalization_table(self):    
+        table = []
+        max_col = len(self.normalization_d[max(self.normalization_d, key=lambda k: len(self.normalization_d[k]))])
+
+        for c in self.normalization_d:
+            l = self.normalization_d.get(c)
+            l = l + [""]*(max_col-len(l))
+            table.append([hex(ord(c)), c] + l)
+        
+        tab = PrettyTable()
+        tab.header = False
+        tab.border = False
+        tab.add_rows(table)
+        print(tab)
+    
+    def generate(self, bytes, index, replace=False):
+        s = self.input
+        a = s[:index]
+        b = s[index:]
+        
+        if replace:
+            a = s[:index]
+            b = s[index+1:]    
+        
+        x = ""
+        if self.encoding == self.ENCODING_URL:
+            for byte in bytes:
+                if byte > 0xff:
+                    x += urllib.parse.quote(chr(byte))
+                else:
+                    x += "%{y}".format(y=hex(byte)[2:].zfill(2))
+            self.output.append("{a}{x}{b}".format(x=x, a=a, b=b))
+        elif self.encoding == self.ENCODING_RAW:
+            for byte in bytes:
+                if 10 <= byte < 13 or byte == 27:
+                    continue
+                x += chr(byte)
+            try:
+                self.output.append("{a}{x}{b}".format(x=x, a=a, b=b))
+            except UnicodeEncodeError:
+                pass
+        elif self.encoding == self.ENCODING_UNICODE:
+            for byte in bytes:
+                x += "\\u{x}".format(x=hex(byte)[2:].zfill(4))
+            self.output.append("{a}{x}{b}".format(x=x, a=a, b=b))
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="REcollapse is a helper tool for black-box regex fuzzing to bypass validations and discover normalizations in web applications")
+
+    parser.add_argument("-p", "--positions", help="pivot position modes. Example: 1,2,3,4 (default). 1: starting, 2: separator, 3: normalization, 4: termination", required=False, default="1,2,3,4", type=str)
+    parser.add_argument("-e", "--encoding", help="1: URL-encoded format (default), 2: Unicode format, 3: Raw format", required=False, default=1, type=int, choices=range(1, 4))
+    parser.add_argument("-r", "--range", help="range of bytes for fuzzing. Example: 0,0xff (default)", required=False, default="0,0xff", type=str)
+    parser.add_argument("-s", "--size", help="number of fuzzing bytes (default: 1)", required=False, default=1)
+    parser.add_argument("-f", "--file", help="read input from file", required=False)
+    parser.add_argument("-an", "--alphanum", help="include alphanumeric bytes in fuzzing range", required=False, default=False, action="store_true")
+    parser.add_argument("-mn", "--maxnorm", help="maximum number of normalizations (default: 3)", default=3, type=int)
+    parser.add_argument("-nt", "--normtable", help="print normalization table", required=False, default=False, action="store_true")
+    parser.add_argument("input", help="original input", nargs="?")
+
+    args = parser.parse_args()
+    
+    if len(sys.argv) == 1:
+        parser.print_help()
+        exit(1)
+
+    if args.range:
+        base = 0
+        sep = ","
+        if "0x" in args.range:
+            base = 16
+        if "-" in args.range:
+            sep = "-"
+        args.range = list(map(lambda x: int(x, base), args.range.split(sep)))
+        if len(args.range) == 1:
+            args.range.append(args.range[0]+1)
+
+    if args.positions:
+        try:
+            args.positions = list(map(lambda x: int(x), args.positions.split(",")))
+        except ValueError:
+            print("Invalid positions provided")
+            exit(1)
+        
+        for p in args.positions:
+            if not 0 < p < 5:
+                print("Invalid positions provided")
+                exit(1)
+    
+    args.size = int(args.size)
+    
+    return args
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    recollapse = Recollapse(**vars(args))
+    recollapse.run()
