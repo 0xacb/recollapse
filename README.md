@@ -2,7 +2,7 @@
 
 REcollapse is a helper tool for black-box regex fuzzing to bypass validations and discover normalizations in web applications.
 
-It can also be helpful to bypass WAFs and weak vulnerability mitigations. For more information, take a look at the [REcollapse slides](https://github.com/0xacb/recollapse/blob/main/till_recollapse_fuzzing_the_web_for_mysterious_bugs.pdf).
+It can also be helpful to bypass WAFs and weak vulnerability mitigations. For more information, take a look at the [REcollapse blog post](https://0xacb.com/2022/11/20/recollapse/).
 
 The goal of this tool is to generate payloads for testing. Actual fuzzing shall be done with other tools like [Burp](https://portswigger.net/burp) (intruder), [ffuf](https://github.com/ffuf/ffuf), or similar.
 
@@ -127,6 +127,8 @@ https://legit.example.com%0b
 ### Resources
 
 This technique has been presented on [BSidesLisbon 2022](https://bsideslisbon.org/)
+
+**Blog post**: https://0xacb.com/2022/11/20/recollapse/
 
 **Slides**: [till_recollapse_fuzzing_the_web_for_mysterious_bugs.pdf](https://github.com/0xacb/recollapse/blob/main/till_recollapse_fuzzing_the_web_for_mysterious_bugs.pdf)
 
