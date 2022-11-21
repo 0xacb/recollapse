@@ -147,6 +147,12 @@ This technique has been presented on [BSidesLisbon 2022](https://bsideslisbon.or
 - [@vgpinho](https://github.com/vgpinho)
 - **BBAC**
 
+and
+
+- [@ethiack](https://twitter.com/ethiack) team
+- [@0xdisturbance](https://twitter.com/0xdisturbance) team
+- [@hacker0x01](https://twitter.com/hacker0x01) team
+
 ---------------
 
 ### ⚠ Legal Disclaimer ⚠
