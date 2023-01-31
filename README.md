@@ -130,7 +130,15 @@ This technique has been presented on [BSidesLisbon 2022](https://bsideslisbon.or
 
 **Blog post**: https://0xacb.com/2022/11/21/recollapse/
 
-**Slides**: [till_recollapse_fuzzing_the_web_for_mysterious_bugs.pdf](https://github.com/0xacb/recollapse/blob/main/till_recollapse_fuzzing_the_web_for_mysterious_bugs.pdf)
+**Slides**:
+
+- [nahamcon_2022_eu_till_recollapse.pdf](https://github.com/0xacb/recollapse/blob/main/slides/nahamcon_2022_eu_till_recollapse.pdf)
+- [bsideslisbon_2022_till_recollapse.pdf](https://github.com/0xacb/recollapse/blob/main/slides/bsideslisbon_2022_till_recollapse.pdf)
+
+**Videos**:
+
+- [NahamCon 2022 EU](https://www.youtube.com/watch?v=1eLTMKWciic)
+- [BSidesLisbon 2022](https://www.youtube.com/watch?v=nb91qhj5cOE)
 
 **Normalization table**: https://0xacb.com/normalization_table
 
