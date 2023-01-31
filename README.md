@@ -16,7 +16,7 @@ The goal of this tool is to generate payloads for testing. Actual fuzzing shall 
 
 **Docker**
 
-`docker build -t recollapse .`
+`docker build -t recollapse .` or `docker pull 0xacb/recollapse`
 
 ---------------
 
