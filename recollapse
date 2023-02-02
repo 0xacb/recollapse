@@ -84,7 +84,7 @@ class Recollapse:
         for c in charset:
             self.normalization_d[c] = []
         
-        for c in range(0xffff):
+        for c in range(0x110000):
             norm_c = unidecode.unidecode(chr(c))
             if len(norm_c) == 1 and norm_c in charset and norm_c != chr(c):
                 self.normalization_d[norm_c].append(chr(c))
