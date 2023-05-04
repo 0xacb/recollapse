@@ -12,6 +12,9 @@ import itertools
 warnings.simplefilter("ignore")
 
 
+VERSION = 0.2
+
+
 class Recollapse:
     ENCODING_URL = 1
     ENCODING_UNICODE = 2
@@ -148,7 +151,7 @@ def parse_args():
     parser.add_argument("-mn", "--maxnorm", help="maximum number of normalizations (default: 3)", default=3, type=int)
     parser.add_argument("-nt", "--normtable", help="print normalization table", required=False, default=False, action="store_true")
     parser.add_argument("input", help="original input", nargs="?")
-
+    parser.add_argument("--version", help="show viewgen version", required=False, action="store_true")
     args = parser.parse_args()
     
     if len(sys.argv) == 1:
@@ -183,7 +186,18 @@ def parse_args():
     return args
 
 
-if __name__ == "__main__":
-    args = parse_args()
+def run_recollapse(args):
+    if args.version:
+        print("recollapse %s" % VERSION)
+        exit(0)
+    
+    del args.version
+    
     recollapse = Recollapse(**vars(args))
     recollapse.run()
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    run_recollapse(args)
+
