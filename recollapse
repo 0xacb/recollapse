@@ -151,7 +151,7 @@ def parse_args():
     parser.add_argument("-mn", "--maxnorm", help="maximum number of normalizations (default: 3)", default=3, type=int)
     parser.add_argument("-nt", "--normtable", help="print normalization table", required=False, default=False, action="store_true")
     parser.add_argument("input", help="original input", nargs="?")
-    parser.add_argument("--version", help="show viewgen version", required=False, action="store_true")
+    parser.add_argument("--version", help="show recollapse version", required=False, action="store_true")
     args = parser.parse_args()
     
     if len(sys.argv) == 1:
