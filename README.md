@@ -12,7 +12,7 @@ The goal of this tool is to generate payloads for testing. Actual fuzzing shall 
 
 **Requirements**: Python 3
 
-`pip3 install --user --upgrade -r requirements.txt` or `./install.sh`
+`pip3 install --user --upgrade --break-system-packages -r requirements.txt` or `./install.sh`
 
 **Docker**
 
@@ -23,32 +23,27 @@ The goal of this tool is to generate payloads for testing. Actual fuzzing shall 
 ### Usage
 ```
 $ recollapse -h
-usage: recollapse [-h] [-p POSITIONS] [-e {1,2,3}] [-r RANGE] [-s SIZE] [-f FILE]
-                  [-an] [-mn MAXNORM] [-nt]
-                  [input]
+usage: recollapse [-h] [-p POSITIONS] [-e {1,2,3}] [-r RANGE] [-s SIZE] [-f FILE] [-an] [-mn MAXNORM] [-nt] [--version] [input]
 
-REcollapse is a helper tool for black-box regex fuzzing to bypass validations and
-discover normalizations in web applications
+REcollapse is a helper tool for black-box regex fuzzing to bypass validations and discover normalizations in web applications
 
 positional arguments:
   input                 original input
 
 options:
   -h, --help            show this help message and exit
-  -p POSITIONS, --positions POSITIONS
-                        pivot position modes. Example: 1,2,3,4 (default). 1: starting,
-                        2: separator, 3: normalization, 4: termination
-  -e {1,2,3}, --encoding {1,2,3}
-                        1: URL-encoded format (default), 2: Unicode format, 3: Raw
-                        format
-  -r RANGE, --range RANGE
-                        range of bytes for fuzzing. Example: 0,0xff (default)
-  -s SIZE, --size SIZE  number of fuzzing bytes (default: 1)
-  -f FILE, --file FILE  read input from file
+  -p, --positions POSITIONS
+                        pivot position modes. Example: 1,2,3,4,5 (default). 1: starting, 2: separator, 3: normalization, 4: termination, 5: regex metacharacters
+  -e, --encoding {1,2,3}
+                        1: URL-encoded format (default), 2: Unicode format, 3: Raw format
+  -r, --range RANGE     range of bytes for fuzzing. Example: 0,0xff (default)
+  -s, --size SIZE       number of fuzzing bytes (default: 1)
+  -f, --file FILE       read input from file
   -an, --alphanum       include alphanumeric bytes in fuzzing range
-  -mn MAXNORM, --maxnorm MAXNORM
+  -mn, --maxnorm MAXNORM
                         maximum number of normalizations (default: 3)
   -nt, --normtable      print normalization table
+  --version             show recollapse version
 ```
 
 ---------------
@@ -63,6 +58,7 @@ Let's consider `this_is.an_example` as the input.
 2. Fuzz the before and after special characters: `this$_$is$.$an$_$example`
 3. Fuzz normalization positions: replace all possible bytes according to the [normalization table](https://0xacb.com/normalization_table)
 4. Fuzz the end of the input: `this_is.an_example$`
+5. Fuzz regex metacharacters: replace all possible regex metacharacters: `.^$*+-?()[]{}\|`
 
 **Encoding**
 
