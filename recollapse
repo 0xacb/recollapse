@@ -187,6 +187,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--version", help="show recollapse version", required=False, action="store_true")
     args = parser.parse_args()
 
+    if args.version:
+        print(f"recollapse {VERSION}")
+        sys.exit(0)
+
+    del args.version
+    
     if args.range:
         base = 0
         sep = ","
@@ -211,24 +217,18 @@ def parse_args() -> argparse.Namespace:
                 sys.exit(1)
 
     args.size = int(args.size)
-
+    
     if not args.input and not args.file and not args.normtable:
         if not sys.stdin.isatty():
             args.input = sys.stdin.read().rstrip()
         else:
             parser.print_help()
             sys.exit(1)
-
+    
     return args
 
 
 def run_recollapse(args: argparse.Namespace) -> None:
-    if args.version:
-        print(f"recollapse {VERSION}")
-        sys.exit(0)
-
-    del args.version
-
     recollapse = Recollapse(**vars(args))
     recollapse.run()
 
