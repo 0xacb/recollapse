@@ -4,7 +4,7 @@ REcollapse is a helper tool for black-box regex fuzzing to bypass validations an
 
 It can also be helpful to bypass WAFs and weak vulnerability mitigations. For more information, take a look at the [REcollapse blog post](https://0xacb.com/2022/11/21/recollapse/).
 
-The goal of this tool is to generate payloads for testing. Actual fuzzing shall be done with other tools like [Burp](https://portswigger.net/burp) (intruder), [ffuf](https://github.com/ffuf/ffuf), or similar.
+The goal of this tool is to generate payloads for testing. Actual fuzzing shall be done with other tools like [Burp](https://portswigger.net/burp) (intruder), [Caido](https://caido.io) (automate), [ffuf](https://github.com/ffuf/ffuf), or similar.
 
 ---------------
 
