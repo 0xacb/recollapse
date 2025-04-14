@@ -23,7 +23,7 @@ The goal of this tool is to generate payloads for testing. Actual fuzzing shall 
 ### Usage
 ```
 $ recollapse -h
-usage: recollapse [-h] [-p POSITIONS] [-e {1,2,3}] [-r RANGE] [-s SIZE] [-f FILE] [-an] [-mn MAXNORM] [-nt] [--version] [input]
+usage: recollapse [-h] [-p POSITIONS] [-e {1,2,3,4}] [-r RANGE] [-s SIZE] [-f FILE] [-an] [-mn MAXNORM] [-nt] [--version] [input]
 
 REcollapse is a helper tool for black-box regex fuzzing to bypass validations and discover normalizations in web applications
 
@@ -32,15 +32,16 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -p, --positions POSITIONS
+  -p POSITIONS, --positions POSITIONS
                         pivot position modes. Example: 1,2,3,4,5 (default). 1: starting, 2: separator, 3: normalization, 4: termination, 5: regex metacharacters
-  -e, --encoding {1,2,3}
-                        1: URL-encoded format (default), 2: Unicode format, 3: Raw format
-  -r, --range RANGE     range of bytes for fuzzing. Example: 0,0xff (default)
-  -s, --size SIZE       number of fuzzing bytes (default: 1)
-  -f, --file FILE       read input from file
+  -e {1,2,3,4}, --encoding {1,2,3,4}
+                        1: URL-encoded format (default), 2: Unicode format, 3: Raw format, 4: Double URL-encoded format
+  -r RANGE, --range RANGE
+                        range of bytes for fuzzing. Example: 0,0xff (default)
+  -s SIZE, --size SIZE  number of fuzzing bytes (default: 1)
+  -f FILE, --file FILE  read input from file
   -an, --alphanum       include alphanumeric bytes in fuzzing range
-  -mn, --maxnorm MAXNORM
+  -mn MAXNORM, --maxnorm MAXNORM
                         maximum number of normalizations (default: 3)
   -nt, --normtable      print normalization table
   --version             show recollapse version
@@ -62,9 +63,10 @@ Let's consider `this_is.an_example` as the input.
 
 **Encoding**
 
-1. URL-encoded format to be used with `application/x-www-form-urlencoded` or query parameters: `%22this_is.an_example`
+1. URL-encoded format to be used with `application/x-www-form-urlencoded` or query/body parameters: `%22this_is.an_example`
 2. Unicode format to be used with `application/json`: `\u0022this_is.an_example`
 3. Raw format to be used with `multipart/form-data`: `"this_is.an_example`
+4. Double URL-encoded format
 
 **Range**
 
@@ -92,7 +94,7 @@ Use the `-nt` option to show the normalization table.
 
 ---------------
 
-### Example
+### Examples
 
 ```bash
 $ recollapse -e 1 -p 1,2,4 -r 10-11 https://legit.example.com
@@ -100,22 +102,14 @@ $ recollapse -e 1 -p 1,2,4 -r 10-11 https://legit.example.com
 %0bhttps://legit.example.com
 https%0a://legit.example.com
 https%0b://legit.example.com
-https:%0a//legit.example.com
-https:%0b//legit.example.com
-https:/%0a/legit.example.com
-https:/%0b/legit.example.com
-https://%0alegit.example.com
-https://%0blegit.example.com
-https://legit%0a.example.com
-https://legit%0b.example.com
-https://legit.%0aexample.com
-https://legit.%0bexample.com
-https://legit.example%0a.com
-https://legit.example%0b.com
-https://legit.example.%0acom
-https://legit.example.%0bcom
-https://legit.example.com%0a
-https://legit.example.com%0b
+...
+
+$ echo "a@b.com" | recollapse 
+%00a@b.com
+%01a@b.com
+...
+
+$ echo "<svg/onload=alert(1)>" | recollapse | ffuf -w - -u "https://example.com/?param=FUZZ" -mc 200,403,500
 ```
 
 ---------------
