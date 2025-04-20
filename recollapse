@@ -39,8 +39,8 @@ class Recollapse:
                  encoding: int,
                  range: list,
                  positions: list,
-                 input: Optional[None],
-                 file: Optional[None],
+                 input: Optional[str],
+                 file: Optional[str],
                  normtable: bool,
                  alphanum: bool,
                  maxnorm: int) -> None:
