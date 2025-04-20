@@ -7,7 +7,7 @@ import string
 import sys
 import urllib.parse
 import warnings
-from typing import ClassVar
+from typing import ClassVar, Optional
 
 import unidecode
 from prettytable import PrettyTable
@@ -39,8 +39,8 @@ class Recollapse:
                  encoding: int,
                  range: list,
                  positions: list,
-                 input: str | None,
-                 file: str | None,
+                 input: Optional[str],
+                 file: Optional[str],
                  normtable: bool,
                  alphanum: bool,
                  maxnorm: int) -> None:
