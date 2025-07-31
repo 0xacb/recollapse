@@ -159,9 +159,11 @@ This technique was originally presented on [BSidesLisbon 2022](https://bsideslis
 - [NahamCon 2022 EU](https://www.youtube.com/watch?v=1eLTMKWciic)
 - [BSidesLisbon 2022](https://www.youtube.com/watch?v=nb91qhj5cOE)
 
-**Normalization table**: https://0xacb.com/normalization_table
-**Case table**: https://0xacb.com/case_table
-**Truncation table**: https://0xacb.com/truncation_table
+**Tables**:
+
+- **Normalization table**: https://0xacb.com/normalization_table
+- **Case table**: https://0xacb.com/case_table
+- **Truncation table**: https://0xacb.com/truncation_table
 
 ---------------
 
