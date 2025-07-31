@@ -1,19 +1,16 @@
-FROM python:3.11-alpine as base
+FROM python:3.13-alpine AS base
 
-FROM base as build
+FROM base AS build
 
 WORKDIR /build
 
-COPY requirements.txt /requirements.txt
-RUN pip install --prefix /build -r /requirements.txt
+COPY setup.py README.md requirements.txt ./
+COPY src/ ./src/
+
+RUN pip install --prefix /build .
 
 FROM base
 
 COPY --from=build /build /usr/local
 
-WORKDIR /tool
-
-COPY recollapse /tool
-RUN chmod +x recollapse
-
-ENTRYPOINT ["/tool/recollapse"]
+ENTRYPOINT ["recollapse"]
