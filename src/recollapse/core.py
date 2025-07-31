@@ -260,17 +260,13 @@ class Recollapse:
             char = chr(c)
             for case_c in [char.upper(), char.lower(), char.casefold()]:
                 if (
-                    len(case_c) < 2
+                    len(case_c) == 1
                 ):
                     if case_c != char:
                         if not self.case_d.get(case_c):
                             self.case_d[case_c] = []
                         if char not in self.case_d[case_c]:
                             self.case_d[case_c].append(char)
-                #elif len(transformed) > 1 and all(
-                #    0x20 <= ord(tc) <= 0x7f for tc in transformed
-                #):
-                #    print(f"Warning: {char} ({hex(c)}) has a case with more than one character: {transformed}")
 
         self.case_d = dict(sorted(self.case_d.items(), key=lambda item: item[0]))
 
