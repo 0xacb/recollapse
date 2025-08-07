@@ -12,7 +12,7 @@ The goal of this tool is to generate payloads for testing. Actual fuzzing shall 
 
 **Requirements**: Python 3
 
-`python3 setup.py install` or `pip3 install .`
+`pip3 install recollapse` or `python3 setup.py install` or `pip3 install .`
 
 **Docker**
 

@@ -22,7 +22,6 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
-        "Intended Audience :: Security Researchers",
         "Topic :: Security",
         "Topic :: Software Development :: Testing",
     ],
